@@ -42,7 +42,7 @@ while True:
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.3:
+            if confidence > 0.80:
                 # onject detected
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
@@ -56,21 +56,20 @@ while True:
                 # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
 
                 boxes.append([x, y, w, h])  # put all rectangle areas
-                confidences.append(
-                    float(confidence))  # how confidence was that object detected and show that percentage
+                confidences.append(float(confidence))  # how confidence was that object detected and show that percentage
                 class_ids.append(class_id)  # name of the object tha was detected
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
 
     for i in range(len(boxes)):
         if i in indexes:
-            x, y, w, h = boxes[i]
+            x, y, w, h = boxes[i] #x, y er positionen på rektanglens øverste venstre hjørne, h, w er hhv højde og bredde
             label = str(classes[class_ids[i]])
             confidence = confidences[i]
             color = colors[class_ids[i]]
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x+100, y+100), font, 1, (255, 255, 255), 2)
-            print(label)
+            print(label+" in frame: "+str(frame_id)+", confidence: {:0.2f}".format(confidence))
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
