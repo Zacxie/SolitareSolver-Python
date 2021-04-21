@@ -1,99 +1,59 @@
-import cv2
-import numpy as np
-import time
+import sys
 
-# net = cv2.dnn.readNet("yolov3.weights","yolov3.cfg") # Original yolov3
+if sys.version_info[0] >= 3:
+    import PySimpleGUI as sg
+else:
+    import PySimpleGUI27 as sg
+import cv2 as cv
+from PIL import Image
+import io
+from sys import exit as exit
 
-net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
-with open("coco.names", "r") as f:
-    classes = [line.strip() for line in f.readlines()]
-
-# print(classes)
+"""
+Demo program that displays a webcam using OpenCV
+"""
 
 
-layer_names = net.getLayerNames()
-outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+def main():
+    sg.ChangeLookAndFeel('LightGreen')
 
-colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    # define the window layout
+    layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],
+              [sg.Image(filename='', key='image')],
+              [sg.ReadButton('Exit', size=(10, 1), pad=((200, 0), 3), font='Helvetica 14'),
+               sg.RButton('About', size=(10, 1), font='Any 14')]]
 
-cap = cv2.VideoCapture("hunde.mp4")  # 0 for 1st webcam
-font = cv2.FONT_HERSHEY_PLAIN
-starting_time = time.time()
-frame_id = 0
+    # create the window and show it without the plot
+    window = sg.Window('Demo Application - OpenCV Integration',
+                       location=(800, 400))
+    window.Layout(layout).Finalize()
 
-while True:
-    _, frame = cap.read()  #
-    frame_id += 1
+    # ---===--- Event LOOP Read and display frames, operate the GUI --- #
+    cap = cv.VideoCapture(0)
+    while True:
+        button, values = window.read(timeout=100)
 
-    height, width, channels = frame.shape
-    # detecting objects
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (320, 320), (0, 0, 0), True, crop=False)  # reduce 416 to 320
+        if button == 'Exit' or values is None:
+            sys.exit(0)
+        elif button == 'About':
+            sg.PopupNoWait('Made with PySimpleGUI',
+                           'www.PySimpleGUI.org',
+                           'Check out how the video keeps playing behind this window.',
+                           'I finally figured out how to display frames from a webcam.',
+                           'ENJOY!  Go make something really cool with this... please!',
+                           keep_on_top=True)
 
-    net.setInput(blob)
-    outs = net.forward(outputlayers)
-    #print(outs[1])
+        ret, frame = cap.read()
 
-    # Showing info on screen/ get confidence score of algorithm in detecting an object in blob
-    class_ids = []
-    confidences = []
-    boxes = []
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.3:
-                # onject detected
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
 
-                # cv2.circle(img,(center_x,center_y),10,(0,255,0),2)
-                # rectangle co-ordinaters
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-                # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+        color = cv.cvtColor(frame, cv.COLOR_BAYER_GB2RGB)
 
-                boxes.append([x, y, w, h])  # put all rectangle areas
-                confidences.append(
-                    float(confidence))  # how confidence was that object detected and show that percentage
-                class_ids.append(class_id)  # name of the object tha was detected
+        # let img be the PIL image
+        img = Image.fromarray(color)  # create PIL image from frame
+        bio = io.BytesIO()  # a binary memory resident stream
+        img.save(bio, format='PNG')  # save image as png to it
+        imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
+        window.FindElement('image').Update(data=imgbytes)
 
-    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
 
-    for i in range(len(boxes)):
-        if i in indexes:
-            x, y, w, h = boxes[i]
-            label = str(classes[class_ids[i]])
-            confidence = confidences[i]
-            color = colors[class_ids[i]]
-            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(frame, label + " " + str(round(confidence, 2)), (x+100, y+100), font, 1, (255, 255, 255), 2)
-            print(label)
-
-    elapsed_time = time.time() - starting_time
-    fps = frame_id / elapsed_time
-    cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
-
-    cv2.imshow("Image", frame)
-    key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
-
-    if key == 27:  # esc key stops the process
-        break
-
-cap.release()
-cv2.destroyAllWindows()
-
-# image = cv2.imread('cards.jpg')
-
-# make it grayscale
-# Gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-
-# Make canny Function
-# canny=cv2.Canny(Gray,40,140)
-
-# the threshold is varies bw 0 and 255
-# cv2.imshow("Canny",canny)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+main()
