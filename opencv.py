@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 
-def func(cap):
+def recognize(cap):
 
     net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
     with open("coco.names", "r") as f:
@@ -71,6 +71,25 @@ def func(cap):
                         (255, 255, 255), 2)
             print(label)
 
+    #Overlay 2 - 3 Boxes
+    rectColor = [0, 0, 255]
+    rectLineWidth=2
+    x_pile_witdh=int(width/7)
+    y_buffer_top = int(height * 0.30)
+    y_buffer_bottom = int(height * 0.35)
+
+    #Stock-Waste
+    cv2.rectangle(frame, (0,0),(2*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+
+    #Foundation
+    cv2.rectangle(frame, (3*x_pile_witdh,0),(width,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+
+    #Tableau
+    cv2.rectangle(frame, (0 * x_pile_witdh, y_buffer_bottom), (width, height), rectColor,
+                  rectLineWidth)  # Upper left pile
+
+
+
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
@@ -81,3 +100,30 @@ def func(cap):
 
 
 
+""" OVERLAY 1 - 14 BOXES
+    #Draw overlay rectangles for piles
+    rectColor = [0, 0, 255]
+    rectLineWidth=2
+    x_pile_witdh=int(width/7)
+    y_buffer_top = int(height * 0.30)
+    y_buffer_bottom = int(height * 0.35)
+
+
+    #Upper piles
+    cv2.rectangle(frame, (0,0),(x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    cv2.rectangle(frame, (x_pile_witdh,0),(2*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    #cv2.rectangle(frame, (2*x_pile_witdh,0),(3*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    cv2.rectangle(frame, (3*x_pile_witdh,0),(4*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    cv2.rectangle(frame, (4*x_pile_witdh,0),(5*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    cv2.rectangle(frame, (5*x_pile_witdh,0),(6*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    cv2.rectangle(frame, (6*x_pile_witdh,0),(7*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+
+    #Lower piles /tableau piles
+    cv2.rectangle(frame, (0 * x_pile_witdh, y_buffer_bottom), (1 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (1 * x_pile_witdh, y_buffer_bottom), (2 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (2 * x_pile_witdh, y_buffer_bottom), (3 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (3 * x_pile_witdh, y_buffer_bottom), (4 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (4 * x_pile_witdh, y_buffer_bottom), (5 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (5 * x_pile_witdh, y_buffer_bottom), (6 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+    cv2.rectangle(frame, (6 * x_pile_witdh, y_buffer_bottom), (7 * x_pile_witdh, height), rectColor, rectLineWidth)  # Upper left pile
+"""
