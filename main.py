@@ -31,6 +31,8 @@ def main():
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     cap = cv.VideoCapture(0)
     while True:
+
+
         button, values = window.read(timeout=100)
 
         if button == 'Exit' or values is None:
@@ -43,13 +45,15 @@ def main():
                            'ENJOY!  Go make something really cool with this... please!',
                            keep_on_top=True)
 
+        # Capture frame-by-frame
         ret, frame = cap.read()
 
+        # Display the resulting frame
+        #cv.imshow('frame', frame)
 
-        color = cv.cvtColor(frame, cv.COLOR_BAYER_GB2RGB)
 
         # let img be the PIL image
-        img = Image.fromarray(color)  # create PIL image from frame
+        img = Image.fromarray(frame)  # create PIL image from frame
         bio = io.BytesIO()  # a binary memory resident stream
         img.save(bio, format='PNG')  # save image as png to it
         imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
