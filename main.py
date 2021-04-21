@@ -8,6 +8,7 @@ import cv2 as cv
 from PIL import Image
 import io
 from sys import exit as exit
+from opencv import func
 
 """
 Demo program that displays a webcam using OpenCV
@@ -50,14 +51,22 @@ def main():
 
         # Display the resulting frame
         #cv.imshow('frame', frame)
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
 
+        frame = func(cap)
 
         # let img be the PIL image
-        img = Image.fromarray(frame)  # create PIL image from frame
+        img = Image.fromarray(gray)  # create PIL image from frame
         bio = io.BytesIO()  # a binary memory resident stream
         img.save(bio, format='PNG')  # save image as png to it
         imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
         window.FindElement('image').Update(data=imgbytes)
+
+
+
+
+
+
 
 
 main()

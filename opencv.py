@@ -2,26 +2,24 @@ import cv2
 import numpy as np
 import time
 
-# net = cv2.dnn.readNet("yolov3.weights","yolov3.cfg") # Original yolov3
 
-net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
-with open("coco.names", "r") as f:
-    classes = [line.strip() for line in f.readlines()]
+def func(cap):
 
-# print(classes)
+    net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
+    with open("coco.names", "r") as f:
+        classes = [line.strip() for line in f.readlines()]
 
 
-layer_names = net.getLayerNames()
-outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    layer_names = net.getLayerNames()
+    outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-cap = cv2.VideoCapture(0)  # 0 for 1st webcam
-font = cv2.FONT_HERSHEY_PLAIN
-starting_time = time.time()
-frame_id = 0
+    font = cv2.FONT_HERSHEY_PLAIN
+    starting_time = time.time()
+    frame_id = 0
 
-while True:
+
     _, frame = cap.read()  #
     frame_id += 1
 
@@ -31,7 +29,7 @@ while True:
 
     net.setInput(blob)
     outs = net.forward(outputlayers)
-    #print(outs[1])
+    # print(outs[1])
 
     # Showing info on screen/ get confidence score of algorithm in detecting an object in blob
     class_ids = []
@@ -69,31 +67,17 @@ while True:
             confidence = confidences[i]
             color = colors[class_ids[i]]
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(frame, label + " " + str(round(confidence, 2)), (x+100, y+100), font, 1, (255, 255, 255), 2)
+            cv2.putText(frame, label + " " + str(round(confidence, 2)), (x + 100, y + 100), font, 1,
+                        (255, 255, 255), 2)
             print(label)
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
 
-    cv2.imshow("Image", frame)
+    #cv2.imshow("Image", frame)
     key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
+    return frame
 
-    if key == 27:  # esc key stops the process
-        break
 
-cap.release()
-cv2.destroyAllWindows()
 
-# image = cv2.imread('cards.jpg')
-
-# make it grayscale
-# Gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-
-# Make canny Function
-# canny=cv2.Canny(Gray,40,140)
-
-# the threshold is varies bw 0 and 255
-# cv2.imshow("Canny",canny)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
