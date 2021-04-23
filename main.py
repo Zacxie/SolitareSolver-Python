@@ -50,7 +50,8 @@ while True:
                 class_ids.append(class_id)
 
     #removing redundant boxes
-    print("length of boxes: "+ str(len(boxes)))
+    # print("length of boxes: "+ str(len(boxes)))
+
     indexes = cv2.dnn.NMSBoxes(boxes,confidences,threshold, 0.4)
     # print("indexes flatten: "+indexes.flatten())
 
@@ -62,9 +63,11 @@ while True:
             x,y,w,h = boxes[i] #identify each object and extract information
             label = str(classes[class_ids[i]])
             confidence = str(round(confidences[i],2))
+            print("label: " + label + ", confidence: "+ confidence)
             color = colors[i]
             cv2.rectangle(img,(x,y),(x+w,y+h),color,2)
-            cv2.putText(img,label +" "+confidence,(x,y+20),font,2,(255,255,255),2)
+            cv2.putText(img,label,(x,y+20),font,2,(255,0,255),2)
+            # cv2.putText(img,label +" "+confidence,(x,y+20),font,2,(255,255,255),2)
 
 
 
