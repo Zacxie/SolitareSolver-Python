@@ -70,6 +70,7 @@ while True:
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x+100, y+100), font, 1, (255, 255, 255), 2)
             print(label+" in frame: "+str(frame_id)+", confidence: {:0.2f}".format(confidence))
+            #print("x: "+str(x)+", y: "+str(y))
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
