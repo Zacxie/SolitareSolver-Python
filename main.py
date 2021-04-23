@@ -4,7 +4,7 @@ import time
 
 # net = cv2.dnn.readNet("yolov3.weights","yolov3.cfg") # Original yolov3
 
-net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
+net = cv2.dnn.readNet("custom-yolov4-tiny-detector_best.weights", "custom-yolov4-tiny-detector.cfg")  # Tiny Yolo
 with open("coco.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
@@ -16,7 +16,7 @@ outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
-cap = cv2.VideoCapture("hunde.mp4")  # 0 for 1st webcam
+cap = cv2.VideoCapture(0)  # 0 for 1st webcam
 font = cv2.FONT_HERSHEY_PLAIN
 starting_time = time.time()
 frame_id = 0
