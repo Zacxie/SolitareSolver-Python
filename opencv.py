@@ -1,13 +1,14 @@
 import cv2
 import numpy as np
 import time
+import stateRecognizer
 
-
-def recognize(cap):
+def analyze(cap, recognizer):
 
     net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
+
 
 
     layer_names = net.getLayerNames()
@@ -69,7 +70,9 @@ def recognize(cap):
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x + 100, y + 100), font, 1,
                         (255, 255, 255), 2)
-            print(label)
+            print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
+            recognizer.addItem(label, x, y)
+            #recognizer.func()
 
     #Overlay 2 - 3 Boxes
     rectColor = [0, 0, 255]

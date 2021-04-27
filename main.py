@@ -1,4 +1,5 @@
 import sys
+import stateRecognizer
 
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
@@ -8,7 +9,7 @@ import cv2 as cv
 from PIL import Image
 import io
 from sys import exit as exit
-from opencv import recognize
+from opencv import analyze
 
 """
 Demo program that displays a webcam using OpenCV
@@ -29,6 +30,9 @@ def main():
     window = sg.Window('Demo Application - OpenCV Integration',
                        location=(800, 400))
     window.Layout(layout).Finalize()
+
+    #Init the stateRecognizer
+    recognizer = stateRecognizer.StateRecognizer()
 
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     cap = cv.VideoCapture(0)
@@ -53,7 +57,7 @@ def main():
         ret, frame = cap.read()
 
         #Get OpenCV to recognize
-        frame = recognize(cap)
+        frame = analyze(cap, recognizer)
 
         # Display the resulting frame
         #cv.imshow('frame', frame)
