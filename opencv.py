@@ -4,11 +4,9 @@ import time
 
 
 def recognize(cap):
-
     net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
-
 
     layer_names = net.getLayerNames()
     outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
@@ -18,7 +16,6 @@ def recognize(cap):
     font = cv2.FONT_HERSHEY_PLAIN
     starting_time = time.time()
     frame_id = 0
-
 
     _, frame = cap.read()  #
     frame_id += 1
@@ -71,33 +68,30 @@ def recognize(cap):
                         (255, 255, 255), 2)
             print(label)
 
-    #Overlay 2 - 3 Boxes
+    # Overlay 2 - 3 Boxes
     rectColor = [0, 0, 255]
-    rectLineWidth=2
-    x_pile_witdh=int(width/7)
+    rectLineWidth = 2
+    x_pile_witdh = int(width / 7)
     y_buffer_top = int(height * 0.30)
     y_buffer_bottom = int(height * 0.35)
 
-    #Stock-Waste
-    cv2.rectangle(frame, (0,0),(2*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    # Stock-Waste
+    cv2.rectangle(frame, (0, 0), (2 * x_pile_witdh, y_buffer_top), rectColor, rectLineWidth)  # Upper left pile
 
-    #Foundation
-    cv2.rectangle(frame, (3*x_pile_witdh,0),(width,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
+    # Foundation
+    cv2.rectangle(frame, (3 * x_pile_witdh, 0), (width, y_buffer_top), rectColor, rectLineWidth)  # Upper left pile
 
-    #Tableau
+    # Tableau
     cv2.rectangle(frame, (0 * x_pile_witdh, y_buffer_bottom), (width, height), rectColor,
                   rectLineWidth)  # Upper left pile
-
-
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
 
-    #cv2.imshow("Image", frame)
+    # cv2.imshow("Image", frame)
     key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
     return frame
-
 
 
 """ OVERLAY 1 - 14 BOXES

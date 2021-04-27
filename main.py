@@ -34,7 +34,6 @@ def main():
     cap = cv.VideoCapture(0)
     while True:
 
-
         button, values = window.read(timeout=0)
 
         if button == 'Exit' or values is None:
