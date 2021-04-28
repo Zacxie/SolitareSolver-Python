@@ -1,7 +1,7 @@
 import cv2
 
 #for image
-img = cv2.imread('IMG_20210427_184443_1.jpg')
+img = cv2.imread('IMG_20210427_185832.jpg')
 
 #for webcam
 #cap = cv2.VideoCapture(0)
