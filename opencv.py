@@ -5,7 +5,7 @@ import stateRecognizer
 
 def analyze(cap, recognizer):
 
-    net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")  # Tiny Yolo
+    net = cv2.dnn.readNet("custom-yolov4-tiny-detector_best.weights", "custom-yolov4-tiny-detector.cfg")  # Tiny Yolo
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
 
@@ -26,7 +26,7 @@ def analyze(cap, recognizer):
 
     height, width, channels = frame.shape
     # detecting objects
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (320, 320), (0, 0, 0), True, crop=False)  # reduce 416 to 320
+    blob = cv2.dnn.blobFromImage(frame, 0.00392, (1024, 1024), (0, 0, 0), True, crop=False)  # reduce 416 to 320
 
     net.setInput(blob)
     outs = net.forward(outputlayers)
@@ -71,7 +71,7 @@ def analyze(cap, recognizer):
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x + 100, y + 100), font, 1,
                         (255, 255, 255), 2)
             print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
-            recognizer.addItem(label, x+w/2, y+h/2)
+            recognizer.addItem(label)
 
     #Overlay 2 - 3 Boxes
     rectColor = [0, 0, 255]

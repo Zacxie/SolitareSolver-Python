@@ -58,17 +58,18 @@ def main():
         elif button == 'Start Capture':
             recognizer.reset()
         elif button == 'End Capture':
+            newCards = "None"
             if firstRound:
-                recognizer.evaluateFirstRound()
+                newCards = recognizer.evaluateFirstRound()
                 firstRound=False
             else:
-                newCard = recognizer.evaluate()
+                newCards = recognizer.evaluate()
 
 
 
 
             answer = sg.popup_yes_no('Confirming state',
-                                     'New card this round was: ' + newCard,
+                                     'New card this round was: ' + str(newCards),
                                      'Are you satisfied with the current state recognized?',
                                      keep_on_top=True)
             if (answer=="Yes"):

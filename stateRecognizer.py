@@ -42,7 +42,7 @@ class StateRecognizer(object):
     def evaluateFirstRound(self):
         #In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
         if len(self.itemLabels) != 7:
-            return None
+            return "ERROR - NOT 7 CARDS"
         sorted_x, sorted_labels = zip(*sorted(zip(self.x, self.itemLabels)))
 
         #Mark all the 7 items as processed
