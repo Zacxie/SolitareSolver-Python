@@ -28,7 +28,7 @@ while True:
 
     height, width, channels = frame.shape
     # detecting objects
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (832, 832), (0, 0, 0), True, crop=False)  # reduce 416 to 320
+    blob = cv2.dnn.blobFromImage(frame, 0.00392, (1024, 1024), (0, 0, 0), True, crop=False)
 
     net.setInput(blob)
     outs = net.forward(outputlayers)
