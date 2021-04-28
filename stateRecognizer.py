@@ -12,32 +12,43 @@ class StateRecognizer(object):
         self.acceptance_radius = self.x_pile_witdh
         self.itemLabels = []
         self.processed = []
+        self.x = []
+        self.y = []
 
 
     def reset(self):
         #Remove all unprocessed items
         newItemLabels = []
-        for i in self.itemLabels:
+        newX = []
+        newY = []
+        for i in range(len(self.itemLabels)):
             if self.processed[i]:
                 newItemLabels.append(self.itemLabels[i])
+                newX.append(self.x[i])
+                newY.append(self.y[i])
 
         self.itemLabels = newItemLabels
+        self.x = newX
+        self.y = newY
 
         # Mark all the reamaining items as processed
-        for i in self.processed:
+        for i in range(len(self.processed)):
             self.processed[i] = True
 
 
-    def addItem(self, label):
+    def addItem(self, label, x, y):
         is_contained = False
         for i in range(len(self.itemLabels)):
             if self.itemLabels[i] == label:
-
+                self.x[i] = x
+                self.y[i] = y
                 is_contained = True
 
         if not is_contained:
             self.itemLabels.append(label)
             self.processed.append(False)
+            self.x.append(x)
+            self.y.append(y)
 
     def evaluateFirstRound(self):
         #In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
@@ -46,8 +57,7 @@ class StateRecognizer(object):
         sorted_x, sorted_labels = zip(*sorted(zip(self.x, self.itemLabels)))
 
         #Mark all the 7 items as processed
-        for i in self.processed:
-            self.processed[i] = True
+        self.processed = [True,True,True,True,True,True,True]
 
         return sorted_labels
 
@@ -58,9 +68,9 @@ class StateRecognizer(object):
 
         resultCard = None
 
-        for i in self.processed:
+        for i in range(len(self.processed)):
             if not self.processed[i]:
-                if not resultCard == None:
+                if resultCard != None:
                     print('Error - more that one new card this round!')
                     return "ERROR - MORE THAN ONE CARD"
                 # This is the new card that was revealed
@@ -70,7 +80,7 @@ class StateRecognizer(object):
         return resultCard
 
 
-
+"""
     def closestObject(self, x_exp, y_exp):
         closest = None
         min_dist = 10000
@@ -82,3 +92,4 @@ class StateRecognizer(object):
                 closest = self.itemLabels[i]
                 min_dist = dist
         return closest
+"""
