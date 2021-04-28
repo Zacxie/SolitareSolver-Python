@@ -62,10 +62,13 @@ def main():
                 recognizer.evaluateFirstRound()
                 firstRound=False
             else:
-                recognizer.evaluate("STOCK",None,None)
+                newCard = recognizer.evaluate()
+
+
 
 
             answer = sg.popup_yes_no('Confirming state',
+                                     'New card this round was: ' + newCard,
                                      'Are you satisfied with the current state recognized?',
                                      keep_on_top=True)
             if (answer=="Yes"):

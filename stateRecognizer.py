@@ -10,65 +10,66 @@ class StateRecognizer(object):
         self.y_buffer_top = int(height * 0.30)
         self.y_buffer_bottom = int(height * 0.35)
         self.acceptance_radius = self.x_pile_witdh
+        self.itemLabels = []
+        self.processed = []
 
-        self.reset()
 
     def reset(self):
-        self.itemLabels = []
-        self.itemCounts = []
-        self.x = []
-        self.y = []
+        #Remove all unprocessed items
+        newItemLabels = []
+        for i in self.itemLabels:
+            if self.processed[i]:
+                newItemLabels.append(self.itemLabels[i])
+
+        self.itemLabels = newItemLabels
+
+        # Mark all the reamaining items as processed
+        for i in self.processed:
+            self.processed[i] = True
 
 
-    def addItem(self, label, x, y):
+    def addItem(self, label):
         is_contained = False
         for i in range(len(self.itemLabels)):
             if self.itemLabels[i] == label:
-                self.itemCounts[i] = self.itemCounts[i] + 1
-                self.x[i] = x
-                self.y[i] = y
+
                 is_contained = True
 
         if not is_contained:
             self.itemLabels.append(label)
-            self.itemCounts.append(1)
-            self.x.append(x)
-            self.y.append(y)
+            self.processed.append(False)
 
     def evaluateFirstRound(self):
         #In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
         if len(self.itemLabels) != 7:
             return None
         sorted_x, sorted_labels = zip(*sorted(zip(self.x, self.itemLabels)))
+
+        #Mark all the 7 items as processed
+        for i in self.processed:
+            self.processed[i] = True
+
         return sorted_labels
 
 
-    def evaluate(self, pile, leftPile, rightPile):
-        #PIle names: T1, T2, T3,..., T7 + STOCK
-        #In the following rounds - we only look at the pile, we want updated
-        #Uses leftPile and rightPile to assure, that we are looking at the right pile:
-            #E.g. "look for tableau-pile-4 inbetween the pile with KS and 7H"
+    def evaluate(self):
+        #To be called if a new card was revealed to figure out which card it was
+        #Looks at all recognized cards - finds the one that was not known in previous round
+
+        resultCard = None
+
+        for i in self.processed:
+            if not self.processed[i]:
+                if not resultCard == None:
+                    print('Error - more that one new card this round!')
+                    return "ERROR - MORE THAN ONE CARD"
+                # This is the new card that was revealed
+                resultCard = self.itemLabels[i]
+                self.processed[i] = True
+
+        return resultCard
 
 
-        if pile == "STOCK":
-            #Calcuate expected positon
-            x_exp = self.x_pile_witdh
-            y_exp = 0
-
-            #Find object closest to expected position
-            result = self.closestObject(x_exp,y_exp)
-            print(result)
-
-
-
-            #Error if closest object is not within acceptance_radius
-
-
-            #(0,0),(2*x_pile_witdh,y_buffer_top),rectColor,rectLineWidth) #Upper left pile
-            self.x_pile_witdh
-            self.y_buffer_top
-
-        print()
 
     def closestObject(self, x_exp, y_exp):
         closest = None
