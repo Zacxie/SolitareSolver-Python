@@ -73,6 +73,8 @@ def analyze(cap, recognizer):
             print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
             recognizer.addItem(label)
 
+
+"""
     #Overlay 2 - 3 Boxes
     rectColor = [0, 0, 255]
     rectLineWidth=2
@@ -99,7 +101,7 @@ def analyze(cap, recognizer):
     #cv2.imshow("Image", frame)
     key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
     return frame
-
+"""
 
 
 """ OVERLAY 1 - 14 BOXES
