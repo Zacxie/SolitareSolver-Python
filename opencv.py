@@ -3,6 +3,8 @@ import numpy as np
 import time
 import stateRecognizer
 
+CONF_THRESHOLD = 0.9
+
 def analyze(cap, recognizer):
 
     net = cv2.dnn.readNet("custom-yolov4-tiny-detector_best.weights", "custom-yolov4-tiny-detector.cfg")  # Tiny Yolo
@@ -41,7 +43,7 @@ def analyze(cap, recognizer):
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.9:
+            if confidence > CONF_THRESHOLD:
                 # onject detected
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
@@ -74,6 +76,14 @@ def analyze(cap, recognizer):
             recognizer.addItem(label)
 
 
+    elapsed_time = time.time() - starting_time
+    fps = frame_id / elapsed_time
+    cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
+
+    #cv2.imshow("Image", frame)
+    key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
+    return frame
+
 """
     #Overlay 2 - 3 Boxes
     rectColor = [0, 0, 255]
@@ -91,16 +101,6 @@ def analyze(cap, recognizer):
     #Tableau
     cv2.rectangle(frame, (0 * x_pile_witdh, y_buffer_bottom), (width, height), rectColor,
                   rectLineWidth)  # Upper left pile
-
-
-
-    elapsed_time = time.time() - starting_time
-    fps = frame_id / elapsed_time
-    cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
-
-    #cv2.imshow("Image", frame)
-    key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
-    return frame
 """
 
 
