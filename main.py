@@ -16,6 +16,7 @@ outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
 
+
 cap = cv2.VideoCapture(0)  # 0 for 1st webcam
 font = cv2.FONT_HERSHEY_PLAIN
 starting_time = time.time()
