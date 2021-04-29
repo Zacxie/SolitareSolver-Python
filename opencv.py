@@ -3,7 +3,7 @@ import numpy as np
 import time
 import stateRecognizer
 
-CONF_THRESHOLD = 0.95
+CONF_THRESHOLD = 0.6
 
 def analyze(cap, recognizer):
 
@@ -28,7 +28,7 @@ def analyze(cap, recognizer):
 
     height, width, channels = frame.shape
     # detecting objects
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (1524, 1524), (0, 0, 0), True, crop=False)  # reduce 416 to 320
+    blob = cv2.dnn.blobFromImage(frame, 1/500, (1524, 1524), (0, 0, 0), True, crop=False)  # reduce 416 to 320
 
     net.setInput(blob)
     outs = net.forward(outputlayers)
@@ -72,6 +72,7 @@ def analyze(cap, recognizer):
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x + 100, y + 100), font, 1,
                         (255, 255, 255), 2)
+            cv2.set
             print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
             recognizer.addItem(label, int(x+w/2), int(y+h/2))
 
@@ -79,9 +80,10 @@ def analyze(cap, recognizer):
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
-
+    cv2.resize(frame)
     #cv2.imshow("Image", frame)
     key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
+
     return frame
 
 """
