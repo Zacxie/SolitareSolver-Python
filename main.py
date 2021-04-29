@@ -35,7 +35,7 @@ def main():
 
 
     #Initialize video capture and dimensions
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(2)
     _, frame = cap.read()  #
     height, width, _ = frame.shape
 

@@ -3,7 +3,7 @@ import numpy as np
 import time
 import stateRecognizer
 
-CONF_THRESHOLD = 0.9
+CONF_THRESHOLD = 0.95
 
 def analyze(cap, recognizer):
 
@@ -28,7 +28,7 @@ def analyze(cap, recognizer):
 
     height, width, channels = frame.shape
     # detecting objects
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (1024, 1024), (0, 0, 0), True, crop=False)  # reduce 416 to 320
+    blob = cv2.dnn.blobFromImage(frame, 0.00392, (1524, 1524), (0, 0, 0), True, crop=False)  # reduce 416 to 320
 
     net.setInput(blob)
     outs = net.forward(outputlayers)
