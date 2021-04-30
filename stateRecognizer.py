@@ -37,9 +37,11 @@ class StateRecognizer(object):
 
 
     def addItem(self, label, x, y):
+
         is_contained = False
         for i in range(len(self.itemLabels)):
-            if self.itemLabels[i] == label:
+            print(self.itemLabels)
+            if self.itemLabels[i] == label :
                 self.x[i] = x
                 self.y[i] = y
                 is_contained = True

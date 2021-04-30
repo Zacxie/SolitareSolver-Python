@@ -29,7 +29,7 @@ def main():
 
     # create the window and show it without the plot
     window = sg.Window('Demo Application - OpenCV Integration',
-                       location=(800, 400))
+                       location=(3450, 10))
     window.Layout(layout).Finalize()
 
 
