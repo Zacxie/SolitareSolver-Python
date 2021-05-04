@@ -14,10 +14,11 @@ class StateRecognizer(object):
         self.processed = []
         self.x = []
         self.y = []
+        self.count = []
 
 
     def reset(self):
-        #Remove all unprocessed items
+        # Remove all unprocessed items
         newItemLabels = []
         newX = []
         newY = []
@@ -39,22 +40,33 @@ class StateRecognizer(object):
     def addItem(self, label, x, y):
         is_contained = False
         for i in range(len(self.itemLabels)):
+            # If card is already recognized.
             if self.itemLabels[i] == label:
                 self.x[i] = x
                 self.y[i] = y
+                self.count[i] = self.count[i]+1
                 is_contained = True
 
         if not is_contained:
+            # If the card is new and not have been recognized before
             self.itemLabels.append(label)
             self.processed.append(False)
             self.x.append(x)
             self.y.append(y)
+            self.count.append(1)
 
     def evaluateFirstRound(self):
         #In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
-        if len(self.itemLabels) != 7:
-            return "ERROR - NOT 7 CARDS"
-        sorted_x, sorted_labels = zip(*sorted(zip(self.x, self.itemLabels)))
+        if len(self.itemLabels) < 7:
+            return "ERROR - LESS THAN 7 CARDS"
+
+
+        sorted_count, sorted_labels = zip(*sorted(zip(self.count, self.itemLabels)))
+
+        sorted_labels = sorted_labels[0:7]
+        sorted_count = sorted_count[0:7]
+
+        sorted_x, sorted_labels = zip(*sorted(zip(self.x,sorted_labels)))
 
         #Mark all the 7 items as processed
         self.processed = [True,True,True,True,True,True,True]
@@ -63,21 +75,28 @@ class StateRecognizer(object):
 
 
     def evaluate(self):
-        #To be called if a new card was revealed to figure out which card it was
-        #Looks at all recognized cards - finds the one that was not known in previous round
+        # To be called if a new card was revealed to figure out which card it was
+        # Looks at all recognized cards - finds the one that was not known in previous round and also have been recognized the most times
+        # The remaining cards that hasn't been recognized will there count be set to 0.
+        maxCount = 0
+        index = None
 
-        resultCard = None
-
+        # Find the card with the highest count (recognized most times)
         for i in range(len(self.processed)):
             if not self.processed[i]:
-                if resultCard != None:
-                    print('Error - more that one new card this round!')
-                    return "ERROR - MORE THAN ONE CARD"
-                # This is the new card that was revealed
-                resultCard = self.itemLabels[i]
-                self.processed[i] = True
 
-        return resultCard
+                if maxCount < self.count[i]:
+                    maxCount = self.count[i]
+                    index = i
+
+        self.processed[index] = True
+
+        # Sets the count for all the cart that hasn't been processed to 0 (The cards that most likely are errors)
+        for i in range(len(self.processed)):
+            if not self.processed[i]:
+                self.count[i] = 0
+
+        return self.itemLabels[index]
 
 
 """
