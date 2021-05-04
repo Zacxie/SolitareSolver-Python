@@ -21,4 +21,3 @@ def recieve():
     data = conn.recv(1024)
     test = data.decode(encoding='UTF-8')
     print(test.replace("\n", ""))
-

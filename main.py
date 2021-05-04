@@ -75,7 +75,7 @@ def main():
                                      keep_on_top=True)
             if (answer=="Yes"):
                 print("Du har gemt det her frame")
-
+                client.send(newCards)
 
             elif (answer=="No"):
                 print("Vi genstarter genkendelsen")
