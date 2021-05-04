@@ -56,21 +56,33 @@ class StateRecognizer(object):
             self.count.append(1)
 
     def evaluateFirstRound(self):
-        #In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
+        # In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
         if len(self.itemLabels) < 7:
             return "ERROR - LESS THAN 7 CARDS"
 
+        # Sort after count
+        _, sorted_labels = zip(*sorted(zip(self.count, self.itemLabels)))
 
-        sorted_count, sorted_labels = zip(*sorted(zip(self.count, self.itemLabels)))
+        # Take 7 most counted cards
+        sorted_labels = reverse(sorted_labels)[0:7]
 
-        sorted_labels = sorted_labels[0:7]
-        sorted_count = sorted_count[0:7]
+        #Create new x vector - only with cards in sorted_labels
+        newX = []
+        for i in range(len(sorted_labels)):
+            index = self.itemLabels.index(sorted_labels[i])
+            newX.append(self.x[index])
 
-        sorted_x, sorted_labels = zip(*sorted(zip(self.x,sorted_labels)))
+        # Sort after x value
+        _, sorted_labels = zip(*sorted(zip(newX, sorted_labels)))
 
-        #Mark all the 7 items as processed
-        self.processed = [True,True,True,True,True,True,True]
+        #Go through items. Set count to 0 if card was an error. Otherwise mark as processed.
+        for i in range(len(self.itemLabels)):
+            if self.itemLabels[i] not in sorted_labels:
+                self.count[i] = 0
+            else:
+                self.processed[i] = True
 
+        # Return 7 most counted cards sorted after x value
         return sorted_labels
 
 
@@ -112,3 +124,7 @@ class StateRecognizer(object):
                 min_dist = dist
         return closest
 """
+
+
+def reverse(lst):
+    return [ele for ele in reversed(lst)]

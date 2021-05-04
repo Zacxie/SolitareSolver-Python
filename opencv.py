@@ -3,7 +3,7 @@ import numpy as np
 import time
 import stateRecognizer
 
-CONF_THRESHOLD = 0.95
+CONF_THRESHOLD = 0.65
 
 def analyze(cap, recognizer):
 
