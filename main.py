@@ -10,6 +10,7 @@ from PIL import Image
 import io
 from sys import exit as exit
 from opencv import analyze
+import client
 
 """
 Demo program that displays a webcam using OpenCV
@@ -74,6 +75,7 @@ def main():
                                      keep_on_top=True)
             if (answer=="Yes"):
                 print("Du har gemt det her frame")
+                client.send(newCards)
 
             elif (answer=="No"):
                 print("Vi genstarter genkendelsen")
