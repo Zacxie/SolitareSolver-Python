@@ -1,12 +1,12 @@
 import math
 
+
 class StateRecognizer(object):
 
-
-    def __init__(self,width,height):
-        self.width=width
-        self.height=height
-        self.x_pile_witdh=int(width/7)
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.x_pile_witdh = int(width / 7)
         self.y_buffer_top = int(height * 0.30)
         self.y_buffer_bottom = int(height * 0.35)
         self.acceptance_radius = self.x_pile_witdh
@@ -16,8 +16,14 @@ class StateRecognizer(object):
         self.y = []
         self.count = []
 
-
     def reset(self):
+        self.itemLabels = []
+        self.processed = []
+        self.x = []
+        self.y = []
+        self.count = []
+
+    def reEvaluate(self):
         # Remove all unprocessed items
         newItemLabels = []
         newX = []
@@ -36,7 +42,6 @@ class StateRecognizer(object):
         for i in range(len(self.processed)):
             self.processed[i] = True
 
-
     def addItem(self, label, x, y):
         is_contained = False
         for i in range(len(self.itemLabels)):
@@ -44,7 +49,7 @@ class StateRecognizer(object):
             if self.itemLabels[i] == label:
                 self.x[i] = x
                 self.y[i] = y
-                self.count[i] = self.count[i]+1
+                self.count[i] = self.count[i] + 1
                 is_contained = True
 
         if not is_contained:
@@ -66,7 +71,7 @@ class StateRecognizer(object):
         # Take 7 most counted cards
         sorted_labels = reverse(sorted_labels)[0:7]
 
-        #Create new x vector - only with cards in sorted_labels
+        # Create new x vector - only with cards in sorted_labels
         newX = []
         for i in range(len(sorted_labels)):
             index = self.itemLabels.index(sorted_labels[i])
@@ -75,7 +80,7 @@ class StateRecognizer(object):
         # Sort after x value
         _, sorted_labels = zip(*sorted(zip(newX, sorted_labels)))
 
-        #Go through items. Set count to 0 if card was an error. Otherwise mark as processed.
+        # Go through items. Set count to 0 if card was an error. Otherwise mark as processed.
         for i in range(len(self.itemLabels)):
             if self.itemLabels[i] not in sorted_labels:
                 self.count[i] = 0
@@ -84,7 +89,6 @@ class StateRecognizer(object):
 
         # Return 7 most counted cards sorted after x value
         return sorted_labels
-
 
     def evaluate(self):
         # To be called if a new card was revealed to figure out which card it was

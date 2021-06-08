@@ -26,7 +26,8 @@ def main():
               [sg.Multiline(size=(30, 5),disabled=True, key='textbox',justification='top'),sg.Image(filename='', key='image')],
               [sg.ReadButton('Exit', size=(10, 1), pad=((200, 0), 3), font='Helvetica 14'),
                sg.RButton('Start Capture', size=(10, 1), font='Any 14'),
-               sg.RButton('End Capture', size=(10, 1), font='Any 14')]]
+               sg.RButton('End Capture', size=(10, 1), font='Any 14'),
+               sg.RButton('New Game', size=(10, 1), font='Any 14')]]
 
     # create the window and show it without the plot
     window = sg.Window('Demo Application - OpenCV Integration',
@@ -41,7 +42,7 @@ def main():
     height, width, _ = frame.shape
 
     #Init the stateRecognizer
-    recognizer = stateRecognizer.StateRecognizer(width,height)
+    recognizer = stateRecognizer.StateRecognizer(width, height)
 
     #State parameters
     capturing = False
@@ -57,6 +58,8 @@ def main():
         if button == 'Exit' or values is None:
             sys.exit(0)
         elif button == 'Start Capture':
+            recognizer.reEvaluate()
+        elif button == 'New Game':
             recognizer.reset()
         elif button == 'End Capture':
             newCards = "None"
