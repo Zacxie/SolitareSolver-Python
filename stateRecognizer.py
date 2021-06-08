@@ -15,6 +15,9 @@ class StateRecognizer(object):
         self.x = []
         self.y = []
         self.count = []
+        self.ready = False
+
+
 
     def reset(self):
         self.itemLabels = []
@@ -22,9 +25,11 @@ class StateRecognizer(object):
         self.x = []
         self.y = []
         self.count = []
+        self.ready = False
 
     def reEvaluate(self):
         # Remove all unprocessed items
+        self.ready = False
         newItemLabels = []
         newX = []
         newY = []
@@ -59,6 +64,8 @@ class StateRecognizer(object):
             self.x.append(x)
             self.y.append(y)
             self.count.append(1)
+
+
 
     def evaluateFirstRound(self):
         # In the first round - we assume, that it has recognized 7 cards and we want these sorted with regards to x-value
@@ -114,21 +121,11 @@ class StateRecognizer(object):
 
         return self.itemLabels[index]
 
-
-"""
-    def closestObject(self, x_exp, y_exp):
-        closest = None
-        min_dist = 10000
-        for i in range(len(self.itemLabels)):
-            x_dist = self.x[i] - x_exp
-            y_dist = self.y[i] - y_exp
-            dist = math.sqrt(x_dist*x_dist + y_dist*y_dist)
-            if (dist < min_dist):
-                closest = self.itemLabels[i]
-                min_dist = dist
-        return closest
-"""
+    def isReady(self, expected):
+        return len(self.itemLabels) >= expected
 
 
 def reverse(lst):
     return [ele for ele in reversed(lst)]
+
+

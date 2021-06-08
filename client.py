@@ -13,11 +13,15 @@ print("Connection established")
 
 
 def send(cardArray):
-    s = ' '.join([str(elem) for elem in cardArray])  # converts a string array to a string
-    conn.send(bytes(s + " \r\n", 'UTF-8'))  # sends the string to the java server
+    if cardArray == None or cardArray == 'NONE':
+        conn.send(bytes('NONE' + "\r\n", 'UTF-8'))  # sends the string to the java server
+    else:
+        s = ' '.join([str(elem) for elem in cardArray])  # converts a string array to a string
+        conn.send(bytes(s + " \r\n", 'UTF-8'))  # sends the string to the java server
 
 
 def recieve():
     data = conn.recv(1024)
-    test = data.decode(encoding='UTF-8')
-    print(test.replace("\n", ""))
+    msg = data.decode(encoding='UTF-8')
+    print(msg)
+    return msg

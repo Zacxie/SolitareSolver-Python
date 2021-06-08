@@ -5,7 +5,7 @@ import stateRecognizer
 
 CONF_THRESHOLD = 0.65
 
-def analyze(cap, recognizer):
+def analyze(cap, recognizer, expected):
 
     net = cv2.dnn.readNet("custom-yolov4-tiny-detector_best.weights", "custom-yolov4-tiny-detector.cfg")  # Tiny Yolo
     with open("coco.names", "r") as f:
@@ -78,7 +78,14 @@ def analyze(cap, recognizer):
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
-    cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 50), font, 2, (0, 0, 0), 1)
+    cv2.putText(frame, "FPS:" + str(round(fps, 2)), (10, 150), font, 2, (0, 0, 0), 1)
+
+    if recognizer.isReady(expected):
+        cv2.putText(frame, "Ready", (10, 50), font, 2, (0, 255, 0), 3)
+    else:
+        cv2.putText(frame, "Not Ready", (10, 50), font, 2, (0, 0, 255), 3)
+
+
 
     #cv2.imshow("Image", frame)
     key = cv2.waitKey(1)  # wait 1ms the loop will start again and we will process the next frame
