@@ -74,7 +74,7 @@ def main():
 
         elif button == 'Start Capture':
             analyzing = True
-            recognizer.reEvaluate()
+            recognizer.resetTurn()
 
         elif button == 'New Game':
             recognizer.reset()
@@ -117,7 +117,7 @@ def main():
                 window['textbox'].update(moveList)
 
                 #2nd item is true/false describing if a new card is revealed
-                if msgItems == 'true' or msgItems == 'True':
+                if msgItems[1] == 'true' or msgItems[1] == 'True':
                     unknownCard = True
                 else:
                     unknownCard = False
@@ -126,7 +126,8 @@ def main():
 
 
             elif (answer=="No"):
-                recognizer.reEvaluate()
+                recognizer.resetTurn()
+                window['End Capture'].update(disabled=True)
 
         # Capture frame-by-frame
         ret, frame = cap.read()

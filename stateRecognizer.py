@@ -27,7 +27,7 @@ class StateRecognizer(object):
         self.count = []
         self.ready = False
 
-    def reEvaluate(self):
+    def resetTurn(self):
         # Remove all unprocessed items
         self.ready = False
         newItemLabels = []
@@ -42,10 +42,11 @@ class StateRecognizer(object):
         self.itemLabels = newItemLabels
         self.x = newX
         self.y = newY
-
-        # Mark all the reamaining items as processed
-        for i in range(len(self.processed)):
-            self.processed[i] = True
+        self.processed = []
+        # Mark all the remaining items as processed
+        for i in range(len(self.itemLabels)):
+            self.processed.append(True)
+            #self.processed[i] = True
 
     def addItem(self, label, x, y):
         is_contained = False
@@ -101,6 +102,7 @@ class StateRecognizer(object):
         # To be called if a new card was revealed to figure out which card it was
         # Looks at all recognized cards - finds the one that was not known in previous round and also have been recognized the most times
         # The remaining cards that hasn't been recognized will there count be set to 0.
+
         maxCount = 0
         index = None
 
@@ -114,7 +116,7 @@ class StateRecognizer(object):
 
         self.processed[index] = True
 
-        # Sets the count for all the cart that hasn't been processed to 0 (The cards that most likely are errors)
+        # Sets the count for all the cards that hasn't been processed to 0 (The cards that most likely are errors)
         for i in range(len(self.processed)):
             if not self.processed[i]:
                 self.count[i] = 0
