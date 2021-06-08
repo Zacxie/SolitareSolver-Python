@@ -72,7 +72,7 @@ def analyze(cap, recognizer):
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x + 100, y + 100), font, 1,
                         (255, 255, 255), 2)
-            print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
+            #print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
             recognizer.addItem(label, int(x+w/2), int(y+h/2))
 
 

@@ -69,9 +69,6 @@ def main():
             else:
                 newCards = recognizer.evaluate()
 
-
-
-
             answer = sg.popup_yes_no('Confirming state',
                                      'New card this round was: ' + str(newCards),
                                      'Are you satisfied with the current state recognized?',
