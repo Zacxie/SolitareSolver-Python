@@ -1,5 +1,6 @@
 import sys
 import stateRecognizer
+import GUIState
 import conversion
 
 if sys.version_info[0] >= 3:
@@ -18,8 +19,9 @@ Demo program that displays a webcam using OpenCV
 """
 
 
+
 def main():
-    #constants
+    # constants
     noneMSG = 'NONE'
 
     sg.ChangeLookAndFeel('LightGreen')
@@ -27,72 +29,56 @@ def main():
     # define the window layout
     layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],
               [sg.Text('Your moves', size=(40, 1), justification='left', font='Helvetica 14')],
-              [sg.Multiline(size=(30, 30),disabled=True, key='textbox',justification='top'),sg.Image(filename='', key='image')],
+              [sg.Multiline(size=(30, 30), disabled=True, key='textbox', justification='top'),
+               sg.Image(filename='', key='image')],
               [sg.ReadButton('Exit', size=(10, 1), pad=((200, 0), 3), font='Helvetica 14'),
                sg.RButton('Start Capture', size=(10, 1), font='Any 14'),
                sg.RButton('End Capture', size=(10, 1), font='Any 14'),
                sg.RButton('New Game', size=(10, 1), font='Any 14')]]
+    # Initialize video capture and dimensions
+    cap = cv.VideoCapture(0)
+    _, frame = cap.read()  #
+    height, width, _ = frame.shape
 
     # create the window and show it without the plot
     window = sg.Window('Demo Application - OpenCV Integration',
                        location=(800, 400))
     window.Layout(layout).Finalize()
 
-
-
-    #Initialize video capture and dimensions
-    cap = cv.VideoCapture(1)
-    _, frame = cap.read()  #
-    height, width, _ = frame.shape
-
-    #Init the stateRecognizer
-    recognizer = stateRecognizer.StateRecognizer(width, height)
-
-    #State parameters
-    analyzing = False
-    firstRound = True
-    moveList = ''
-    unknownCard = True
-    newCards = noneMSG
-    numOfExpectedCards = 7
-
+    gs = GUIState.GUIState(stateRecognizer.StateRecognizer(width, height), window)
 
 
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     while True:
 
         # Configure buttons
-        if not recognizer.isReady(numOfExpectedCards):
-            window['End Capture'].update(disabled=True)
-        elif analyzing:
-            window['End Capture'].update(disabled=False)
+        if not gs.recognizer.isReady(gs.numOfExpectedCards):
+            gs.window['End Capture'].update(disabled=True)
+        elif gs.analyzing:
+            gs.window['End Capture'].update(disabled=False)
 
-        button, values = window.read(timeout=0)
+        button, values = gs.window.read(timeout=0)
 
         #Button choice
         if button == 'Exit' or values is None:
             sys.exit(0)
 
         elif button == 'Start Capture':
-            analyzing = True
+            gs.analyzing = True
 
         elif button == 'New Game':
 
-            recognizer.reset()
-            moveList = ''
-            window['textbox'].update(moveList)
-            firstRound=True
-            numOfExpectedCards = 7
+            newGame(gs)
 
         elif button == 'End Capture':
-            newCards = noneMSG
+            gs.newCards = noneMSG
             answer = "Yes"
-            analyzing = False
-            window['End Capture'].update(disabled=True)
+            gs.analyzing = False
+            gs.window['End Capture'].update(disabled=True)
 
-            if firstRound:
+            if gs.firstRound:
                 printarray = []
-                newCards = recognizer.evaluateFirstRound()
+                newCards = gs.recognizer.evaluateFirstRound()
                 conversion.convertCards(newCards,printarray)
                 answer = sg.popup_yes_no('Confirming state',
                                          'New cards this round were: ' + str(printarray),
@@ -102,10 +88,10 @@ def main():
             elif unknownCard:
                 printarray = []
                 #Only look for new card if unkownCard is true
-                newCards = recognizer.evaluate()
+                newCards = gs.recognizer.evaluate()
                 print(str(newCards))
                 conversion.convertSingle(newCards, printarray)
-                numOfExpectedCards = numOfExpectedCards + 1
+                gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
                 answer = sg.popup_yes_no('Confirming state',
                                          'New card this round was: ' + str(printarray),
@@ -113,7 +99,7 @@ def main():
                                          keep_on_top=True)
 
             if (answer=="Yes"):
-                recognizer.markAllAsProcessed()
+                gs.recognizer.markAllAsProcessed()
                 # It is no longer first round
                 firstRound=False
 
@@ -123,8 +109,8 @@ def main():
 
                 #1st item is description of move
 
-                moveList = "Processed cards: " +recognizer.getAllProcessedLabels() + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
-                window['textbox'].update(moveList)
+                gs.moveList = "Processed cards: " +gs.recognizer.getAllProcessedLabels() + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + gs.moveList
+                gs.window['textbox'].update(gs.moveList)
 
 
                 #2nd item is true/false describing if a new card is revealed
@@ -134,18 +120,21 @@ def main():
                     unknownCard = False
 
                 #3rd item is either GAME_WON, GAME_LOST or empty
-
+                if msgItems[2] == "GAME_WON":
+                    gameWon()
+                elif msgItems[2] == "GAME_LOST":
+                    gameLost()
 
             elif (answer=="No"):
-                recognizer.resetTurn()
-                window['End Capture'].update(disabled=True)
+                gs.recognizer.resetTurn()
+                gs.window['End Capture'].update(disabled=True)
 
         # Capture frame-by-frame
         ret, frame = cap.read()
 
-        if (analyzing):
+        if (gs.analyzing):
             # Get OpenCV to recognize
-            frame = analyze(cap, recognizer, numOfExpectedCards)
+            frame = analyze(cap, gs.recognizer, gs.numOfExpectedCards)
 
         # Display the resulting frame
         # cv.imshow('frame', frame)
@@ -158,6 +147,20 @@ def main():
         img.save(bio, format='PNG')  # save image as png to it
         imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
         window.FindElement('image').Update(data=imgbytes)
+
+def gameWon():
+    sg.popup_yes_no('Congrats',
+        keep_on_top=True)
+def gameLost():
+    sg.popup_yes_no('You suck',
+        keep_on_top=True)
+
+def newGame(guiState):
+    guiState.recognizer.reset()
+    guiState.moveList = ''
+    guiState.window['textbox'].update(guiState.moveList)
+    guiState.firstRound = True
+    guiState.numOfExpectedCards = 7
 
 main()
 
