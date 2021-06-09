@@ -24,7 +24,7 @@ class StateRecognizer(object):
         self.ready = False
 
     def resetTurn(self):
-        for key in self.processed.items():
+        for key in self.processed.keys():
             self.processed[key] = True
 
     def addItem(self, label, x, y):
@@ -59,9 +59,18 @@ class StateRecognizer(object):
         _, labels = zip(*sorted(zip(xvals, labels)))
 
         # Delete all unrecognized cards
+        deletionList = []
+
         for key in self.processed.keys():
-            if key not in labels:
-                self.count[key] = 0
+            # If not previously processed or the newly found max key - delete it
+            if key not in keys:
+                del self.count[key]
+                del self.x[key]
+                del self.y[key]
+                deletionList.append(key)
+
+        for key in deletionList:
+            del self.processed[key]
 
         return labels
 
@@ -79,14 +88,19 @@ class StateRecognizer(object):
                 maxCount = value
                 maxKey = key
 
+        deletionList = []
+
         # Delete all unrecognized cards
         for key in self.processed.keys():
             # If not previously processed or the newly found max key - delete it
-            if key != maxKey or not self.processed[key]:
+            if key != maxKey and not self.processed[key]:
                 del self.count[key]
-                del self.processed[key]
                 del self.x[key]
                 del self.y[key]
+                deletionList.append(key)
+
+        for key in deletionList:
+            del self.processed[key]
 
         return maxKey
 
