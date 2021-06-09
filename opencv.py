@@ -57,7 +57,7 @@ def analyze(cap, recognizer, expected):
                 # cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
 
                 boxes.append([x, y, w, h])  # put all rectangle areas
-                confidences.append(float(confidence))   # how confidence was that object detected and show that percentage
+                # confidences.append(float(confidence))   # how confidence was that object detected and show that percentage
                 class_ids.append(class_id)  # name of the object tha was detected
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.6)
@@ -73,7 +73,6 @@ def analyze(cap, recognizer, expected):
                         (255, 255, 255), 2)
             #print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
             recognizer.addItem(label, int(x+w/2), int(y+h/2))
-
 
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
