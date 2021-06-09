@@ -45,7 +45,6 @@ def convertCards(newCards, printarray=[]):
         elif (str(i).__contains__('K')):
             number = "K"
         printarray.append(number+suit)
-        print(printarray)
 
 def convertSingle(newCards, printarray=""):
 
@@ -87,7 +86,6 @@ def convertSingle(newCards, printarray=""):
         number = "J"
     elif (newCards.__contains__('Q')):
         number = "Q"
-    elif (str(i).__contains__('K')):
+    elif (newCards.__contains__('K')):
         number = "K"
     printarray.append(number+suit)
-    print(printarray)

@@ -123,7 +123,6 @@ def confirmOtherRounds(gs):
     printarray = []
     # Only look for new card if unkownCard is true
     newCards = gs.recognizer.evaluate()
-    print(str(newCards))
     conversion.convertSingle(newCards, printarray)
     gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
@@ -179,7 +178,6 @@ def endCapture(gs):
     elif (answer == "No"):
         gs.recognizer.resetTurn()
         gs.window['End Capture'].update(disabled=True)
-
 
 
 main()
