@@ -18,11 +18,11 @@ import client
 Demo program that displays a webcam using OpenCV
 """
 
-
+# constants
+noneMSG = 'NONE'
 
 def main():
-    # constants
-    noneMSG = 'NONE'
+
 
     sg.ChangeLookAndFeel('LightGreen')
 
@@ -66,67 +66,10 @@ def main():
             gs.analyzing = True
 
         elif button == 'New Game':
-
             newGame(gs)
 
         elif button == 'End Capture':
-            gs.newCards = noneMSG
-            answer = "Yes"
-            gs.analyzing = False
-            gs.window['End Capture'].update(disabled=True)
-
-            if gs.firstRound:
-                printarray = []
-                newCards = gs.recognizer.evaluateFirstRound()
-                conversion.convertCards(newCards,printarray)
-                answer = sg.popup_yes_no('Confirming state',
-                                         'New cards this round were: ' + str(printarray),
-                                         'Are you satisfied with the current state recognized?',
-                                         keep_on_top=True)
-
-            elif gs.unknownCard:
-                printarray = []
-                #Only look for new card if unkownCard is true
-                newCards = gs.recognizer.evaluate()
-                print(str(newCards))
-                conversion.convertSingle(newCards, printarray)
-                gs.numOfExpectedCards = gs.numOfExpectedCards + 1
-
-                answer = sg.popup_yes_no('Confirming state',
-                                         'New card this round was: ' + str(printarray),
-                                         'Are you satisfied with the current state recognized?',
-                                         keep_on_top=True)
-
-            if (answer=="Yes"):
-                gs.recognizer.markAllAsProcessed()
-                # It is no longer first round
-                firstRound=False
-
-                client.send(newCards)
-                msg = client.recieve()
-                msgItems = msg.split(";")
-
-                #1st item is description of move
-
-                gs.moveList = "Processed cards: " +gs.recognizer.getAllProcessedLabels() + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + gs.moveList
-                gs.window['textbox'].update(gs.moveList)
-
-
-                #2nd item is true/false describing if a new card is revealed
-                if msgItems[1] == 'true' or msgItems[1] == 'True':
-                    gs.unknownCard = True
-                else:
-                    gs.unknownCard = False
-
-                #3rd item is either GAME_WON, GAME_LOST or empty
-                if msgItems[2] == "GAME_WON":
-                    gameWon(gs)
-                elif msgItems[2] == "GAME_LOST":
-                    gameLost(gs)
-
-            elif (answer=="No"):
-                gs.recognizer.resetTurn()
-                gs.window['End Capture'].update(disabled=True)
+            endCapture(gs)
 
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -164,6 +107,80 @@ def newGame(gs):
     gs.window['textbox'].update(gs.moveList)
     gs.firstRound = True
     gs.numOfExpectedCards = 7
+
+
+def confirmFirstRound(gs):
+    printarray = []
+    newCards = gs.recognizer.evaluateFirstRound()
+    conversion.convertCards(newCards, printarray)
+    return sg.popup_yes_no('Confirming state',
+                             'New cards this round were: ' + str(printarray),
+                             'Are you satisfied with the current state recognized?',
+                             keep_on_top=True)
+
+
+def confirmOtherRounds(gs):
+    printarray = []
+    # Only look for new card if unkownCard is true
+    newCards = gs.recognizer.evaluate()
+    print(str(newCards))
+    conversion.convertSingle(newCards, printarray)
+    gs.numOfExpectedCards = gs.numOfExpectedCards + 1
+
+    return sg.popup_yes_no('Confirming state',
+                             'New card this round was: ' + str(printarray),
+                             'Are you satisfied with the current state recognized?',
+                             keep_on_top=True)
+
+
+def onConfirmCards(gs, newCards):
+    gs.recognizer.markAllAsProcessed()
+    # It is no longer first round
+    firstRound = False
+
+    client.send(newCards)
+    msg = client.recieve()
+    msgItems = msg.split(";")
+
+    # 1st item is description of move
+
+    gs.moveList = "Processed cards: " + gs.recognizer.getAllProcessedLabels() + "\nTurn: " + msgItems[3] + "" + \
+                  msgItems[0] + '\n\n' + gs.moveList
+    gs.window['textbox'].update(gs.moveList)
+
+    # 2nd item is true/false describing if a new card is revealed
+    if msgItems[1] == 'true' or msgItems[1] == 'True':
+        gs.unknownCard = True
+    else:
+        gs.unknownCard = False
+
+    # 3rd item is either GAME_WON, GAME_LOST or empty
+    if msgItems[2] == "GAME_WON":
+        gameWon(gs)
+    elif msgItems[2] == "GAME_LOST":
+        gameLost(gs)
+
+
+def endCapture(gs):
+    newCards = noneMSG
+    answer = "Yes"
+    gs.analyzing = False
+    gs.window['End Capture'].update(disabled=True)
+
+    if gs.firstRound:
+       answer = confirmFirstRound(gs)
+
+    elif gs.unknownCard:
+       answer = confirmOtherRounds(gs)
+
+    if (answer == "Yes"):
+        onConfirmCards(gs, newCards)
+
+    elif (answer == "No"):
+        gs.recognizer.resetTurn()
+        gs.window['End Capture'].update(disabled=True)
+
+
 
 main()
 
