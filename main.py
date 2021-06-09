@@ -111,8 +111,8 @@ def newGame(gs):
 
 def confirmFirstRound(gs):
     printarray = []
-    newCards = gs.recognizer.evaluateFirstRound()
-    conversion.convertCards(newCards, printarray)
+    gs.newCards = gs.recognizer.evaluateFirstRound()
+    conversion.convertCards(gs.newCards, printarray)
     return sg.popup_yes_no('Confirming state',
                              'New cards this round were: ' + str(printarray),
                              'Are you satisfied with the current state recognized?',
@@ -122,8 +122,9 @@ def confirmFirstRound(gs):
 def confirmOtherRounds(gs):
     printarray = []
     # Only look for new card if unkownCard is true
-    newCards = gs.recognizer.evaluate()
-    conversion.convertSingle(newCards, printarray)
+    gs.newCards = gs.recognizer.evaluate()
+    if (gs.newCards != None):
+        conversion.convertSingle(gs.newCards, printarray)
     gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
     return sg.popup_yes_no('Confirming state',
@@ -132,12 +133,12 @@ def confirmOtherRounds(gs):
                              keep_on_top=True)
 
 
-def onConfirmCards(gs, newCards):
+def onConfirmCards(gs):
     gs.recognizer.markAllAsProcessed()
     # It is no longer first round
-    firstRound = False
+    gs.firstRound = False
 
-    client.send(newCards)
+    client.send(gs.newCards)
     msg = client.recieve()
     msgItems = msg.split(";")
 
@@ -161,10 +162,12 @@ def onConfirmCards(gs, newCards):
 
 
 def endCapture(gs):
-    newCards = noneMSG
+    gs.newCards = noneMSG
     answer = "Yes"
     gs.analyzing = False
     gs.window['End Capture'].update(disabled=True)
+
+
 
     if gs.firstRound:
        answer = confirmFirstRound(gs)
@@ -173,7 +176,7 @@ def endCapture(gs):
        answer = confirmOtherRounds(gs)
 
     if (answer == "Yes"):
-        onConfirmCards(gs, newCards)
+        onConfirmCards(gs)
 
     elif (answer == "No"):
         gs.recognizer.resetTurn()

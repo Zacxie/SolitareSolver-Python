@@ -1,6 +1,7 @@
 
 class GUIState():
     def __init__(self, recognizer, window):
+        self.newCards = 'NONE'
         self.analyzing = False
         self.recognizer = recognizer
         self.moveList = ""
