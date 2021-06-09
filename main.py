@@ -77,6 +77,7 @@ def main():
             recognizer.resetTurn()
 
         elif button == 'New Game':
+
             recognizer.reset()
             moveList = ''
             window['textbox'].update(moveList)
