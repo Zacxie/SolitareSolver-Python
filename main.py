@@ -93,7 +93,7 @@ def main():
             if firstRound:
                 printarray = []
                 newCards = recognizer.evaluateFirstRound()
-                conversion.converCards(newCards,printarray)
+                conversion.convertCards(newCards,printarray)
                 answer = sg.popup_yes_no('Confirming state',
                                          'New cards this round were: ' + str(printarray),
                                          'Are you satisfied with the current state recognized?',
@@ -103,7 +103,8 @@ def main():
                 printarray = []
                 #Only look for new card if unkownCard is true
                 newCards = recognizer.evaluate()
-                conversion.converCards(newCards, printarray)
+                print(str(newCards))
+                conversion.convertSingle(newCards, printarray)
                 numOfExpectedCards = numOfExpectedCards + 1
 
                 answer = sg.popup_yes_no('Confirming state',
