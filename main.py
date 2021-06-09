@@ -23,7 +23,6 @@ noneMSG = 'NONE'
 
 def main():
 
-
     sg.ChangeLookAndFeel('LightGreen')
 
     # define the window layout
@@ -46,7 +45,6 @@ def main():
     window.Layout(layout).Finalize()
 
     gs = GUIState.GUIState(stateRecognizer.StateRecognizer(width, height), window)
-
 
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     while True:
@@ -108,7 +106,6 @@ def newGame(gs):
     gs.firstRound = True
     gs.numOfExpectedCards = 7
 
-
 def confirmFirstRound(gs):
     printarray = []
     gs.newCards = gs.recognizer.evaluateFirstRound()
@@ -117,7 +114,6 @@ def confirmFirstRound(gs):
                              'New cards this round were: ' + str(printarray),
                              'Are you satisfied with the current state recognized?',
                              keep_on_top=True)
-
 
 def confirmOtherRounds(gs):
     printarray = []
@@ -132,7 +128,6 @@ def confirmOtherRounds(gs):
                              'Are you satisfied with the current state recognized?',
                              keep_on_top=True)
 
-
 def onConfirmCards(gs):
     gs.recognizer.markAllAsProcessed()
     # It is no longer first round
@@ -143,7 +138,6 @@ def onConfirmCards(gs):
     msgItems = msg.split(";")
 
     # 1st item is description of move
-
     gs.moveList = "Processed cards: " + gs.recognizer.getAllProcessedLabels() + "\nTurn: " + msgItems[3] + "" + \
                   msgItems[0] + '\n\n' + gs.moveList
     gs.window['textbox'].update(gs.moveList)
@@ -160,14 +154,11 @@ def onConfirmCards(gs):
     elif msgItems[2] == "GAME_LOST":
         gameLost(gs)
 
-
 def endCapture(gs):
     gs.newCards = noneMSG
     answer = "Yes"
     gs.analyzing = False
     gs.window['End Capture'].update(disabled=True)
-
-
 
     if gs.firstRound:
        answer = confirmFirstRound(gs)
@@ -181,7 +172,6 @@ def endCapture(gs):
     elif (answer == "No"):
         gs.recognizer.resetTurn()
         gs.window['End Capture'].update(disabled=True)
-
 
 main()
 
