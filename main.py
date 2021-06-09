@@ -40,7 +40,7 @@ def main():
 
 
     #Initialize video capture and dimensions
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(1)
     _, frame = cap.read()  #
     height, width, _ = frame.shape
 
@@ -114,8 +114,10 @@ def main():
                 msgItems = msg.split(";")
 
                 #1st item is description of move
-                moveList = msgItems[0] + '\n\n' + moveList
+
+                moveList = "Turn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
                 window['textbox'].update(moveList)
+
 
                 #2nd item is true/false describing if a new card is revealed
                 if msgItems[1] == 'true' or msgItems[1] == 'True':
