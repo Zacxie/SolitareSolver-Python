@@ -24,6 +24,18 @@ class StateRecognizer(object):
         self.ready = False
 
     def resetTurn(self):
+        deletionList = []
+        for key in self.processed.keys():
+            if not self.processed[key]:
+                deletionList.append(key)
+                del self.count[key]
+                del self.x[key]
+                del self.y[key]
+
+        for key in deletionList:
+            del self.processed[key]
+
+    def markAllAsProcessed(self):
         for key in self.processed.keys():
             self.processed[key] = True
 
@@ -107,6 +119,11 @@ class StateRecognizer(object):
     def isReady(self, expected):
         return len(self.processed.keys()) >= expected
 
+    def getAllProcessedLabels(self):
+        resultString = ''
+        for key in self.processed.keys():
+            resultString = resultString + " " +key
+        return resultString
 
 def reverse(lst):
     return [ele for ele in reversed(lst)]

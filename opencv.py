@@ -69,7 +69,7 @@ def analyze(cap, recognizer, expected):
             confidence = confidences[i]
             color = colors[class_ids[i]]
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(frame, "", (x, y), font, 1,
+            cv2.putText(frame, label, (x, y), font, 1,
                         (255, 255, 255), 2)
             #print(label + ' at (x: '+ str(x+w/2) + ', y: ' + str(y+h/2) + ')')
             recognizer.addItem(label, int(x+w/2), int(y+h/2))
