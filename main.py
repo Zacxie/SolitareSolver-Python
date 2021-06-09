@@ -74,7 +74,6 @@ def main():
 
         elif button == 'Start Capture':
             analyzing = True
-            recognizer.resetTurn()
 
         elif button == 'New Game':
 
@@ -92,7 +91,6 @@ def main():
 
             if firstRound:
                 newCards = recognizer.evaluateFirstRound()
-                firstRound=False
                 answer = sg.popup_yes_no('Confirming state',
                                          'New cards this round were: ' + str(newCards),
                                          'Are you satisfied with the current state recognized?',
@@ -109,13 +107,17 @@ def main():
                                          keep_on_top=True)
 
             if (answer=="Yes"):
+                recognizer.markAllAsProcessed()
+                # It is no longer first round
+                firstRound=False
+
                 client.send(newCards)
                 msg = client.recieve()
                 msgItems = msg.split(";")
 
                 #1st item is description of move
 
-                moveList = "Turn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
+                moveList = "Processed cards: " +recognizer.getAllProcessedLabels() + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
                 window['textbox'].update(moveList)
 
 
