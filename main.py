@@ -1,5 +1,6 @@
 import sys
 import stateRecognizer
+import conversion
 
 if sys.version_info[0] >= 3:
     import PySimpleGUI as sg
@@ -90,19 +91,23 @@ def main():
             window['End Capture'].update(disabled=True)
 
             if firstRound:
+                printarray = []
                 newCards = recognizer.evaluateFirstRound()
+                conversion.converCards(newCards,printarray)
                 answer = sg.popup_yes_no('Confirming state',
-                                         'New cards this round were: ' + str(newCards),
+                                         'New cards this round were: ' + str(printarray),
                                          'Are you satisfied with the current state recognized?',
                                          keep_on_top=True)
 
             elif unknownCard:
+                printarray = []
                 #Only look for new card if unkownCard is true
                 newCards = recognizer.evaluate()
+                conversion.converCards(newCards, printarray)
                 numOfExpectedCards = numOfExpectedCards + 1
 
                 answer = sg.popup_yes_no('Confirming state',
-                                         'New card this round was: ' + str(newCards),
+                                         'New card this round was: ' + str(printarray),
                                          'Are you satisfied with the current state recognized?',
                                          keep_on_top=True)
 
