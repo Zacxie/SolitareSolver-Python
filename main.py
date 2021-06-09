@@ -50,7 +50,6 @@ def main():
 
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     while True:
-
         # Configure buttons
         if not gs.recognizer.isReady(gs.numOfExpectedCards):
             gs.window['End Capture'].update(disabled=True)
@@ -85,7 +84,7 @@ def main():
                                          'Are you satisfied with the current state recognized?',
                                          keep_on_top=True)
 
-            elif unknownCard:
+            elif gs.unknownCard:
                 printarray = []
                 #Only look for new card if unkownCard is true
                 newCards = gs.recognizer.evaluate()
@@ -115,15 +114,15 @@ def main():
 
                 #2nd item is true/false describing if a new card is revealed
                 if msgItems[1] == 'true' or msgItems[1] == 'True':
-                    unknownCard = True
+                    gs.unknownCard = True
                 else:
-                    unknownCard = False
+                    gs.unknownCard = False
 
                 #3rd item is either GAME_WON, GAME_LOST or empty
                 if msgItems[2] == "GAME_WON":
-                    gameWon()
+                    gameWon(gs)
                 elif msgItems[2] == "GAME_LOST":
-                    gameLost()
+                    gameLost(gs)
 
             elif (answer=="No"):
                 gs.recognizer.resetTurn()
@@ -148,19 +147,23 @@ def main():
         imgbytes = bio.getvalue()  # this can be used by OpenCV hopefully
         window.FindElement('image').Update(data=imgbytes)
 
-def gameWon():
-    sg.popup_yes_no('Congrats',
-        keep_on_top=True)
-def gameLost():
-    sg.popup_yes_no('You suck',
-        keep_on_top=True)
+def gameWon(gs):
+    gs.window['End Capture'].update(disabled=True)
+    gs.window['Start Capture'].update(disabled=True)
+    sg.popup_yes_no('Congrats', keep_on_top=True)
 
-def newGame(guiState):
-    guiState.recognizer.reset()
-    guiState.moveList = ''
-    guiState.window['textbox'].update(guiState.moveList)
-    guiState.firstRound = True
-    guiState.numOfExpectedCards = 7
+def gameLost(gs):
+    gs.window['End Capture'].update(disabled=True)
+    gs.window['Start Capture'].update(disabled=True)
+    sg.popup_yes_no('You suck', keep_on_top=True)
+
+def newGame(gs):
+    gs.window['Start Capture'].update(disabled=False)
+    gs.recognizer.reset()
+    gs.moveList = ''
+    gs.window['textbox'].update(gs.moveList)
+    gs.firstRound = True
+    gs.numOfExpectedCards = 7
 
 main()
 
