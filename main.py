@@ -103,7 +103,6 @@ def main():
                 printarray = []
                 #Only look for new card if unkownCard is true
                 newCards = recognizer.evaluate()
-                print(str(newCards))
                 conversion.convertSingle(newCards, printarray)
                 numOfExpectedCards = numOfExpectedCards + 1
 
