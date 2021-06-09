@@ -122,7 +122,10 @@ def main():
 
                 #1st item is description of move
 
-                moveList = "Processed cards: " +recognizer.getAllProcessedLabels() + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
+
+                #recognizer.getAllProcessedLabels()) # no longer needed in code. replaced by printarray
+
+                moveList = "Processed cards: " + str(printarray) + "\nTurn: "+msgItems[3]+""+msgItems[0] + '\n\n' + moveList
                 window['textbox'].update(moveList)
 
 
