@@ -159,6 +159,8 @@ def onConfirmCards(gs):
     conversion.stringBuilder(msg0,msg0converted)
     text = msg0converted.__str__().replace("'", "")
     text = text.replace(",","")
+    text = text.replace("[", "")
+    text = text.replace("]", "")
     print("converted msg " + text)
 
 
