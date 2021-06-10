@@ -99,6 +99,8 @@ def gameLost(gs):
     sg.popup_yes_no('You suck', keep_on_top=True)
 
 def newGame(gs):
+    gs.newGamePressed = True
+    endCapture(gs)
     gs.window['Start Capture'].update(disabled=False)
     gs.recognizer.reset()
     gs.moveList = ''
@@ -160,18 +162,20 @@ def endCapture(gs):
     gs.analyzing = False
     gs.window['End Capture'].update(disabled=True)
 
-
-    if gs.firstRound:
+    if not gs.newGamePressed:
+        if gs.firstRound:
             answer = confirmFirstRound(gs)
 
-    elif gs.unknownCard:
+        elif gs.unknownCard:
             answer = confirmOtherRounds(gs)
 
-    if (answer == "Yes"):
+        if (answer == "Yes"):
             onConfirmCards(gs)
 
-    elif (answer == "No"):
-        gs.recognizer.resetTurn()
-        gs.window['End Capture'].update(disabled=True)
+        elif (answer == "No"):
+            gs.recognizer.resetTurn()
+            gs.window['End Capture'].update(disabled=True)
+
+    gs.newGamePressed = False
 
 main()

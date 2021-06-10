@@ -9,3 +9,4 @@ class GUIState():
         self.firstRound = True
         self.numOfExpectedCards = 7
         self.unknownCard = True
+        self.newGamePressed = False
