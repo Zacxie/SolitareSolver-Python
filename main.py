@@ -61,6 +61,7 @@ def main():
             sys.exit(0)
 
         elif button == 'Start Capture':
+            gs.window['Start Capture'].update(disabled=True)
             gs.analyzing = True
 
         elif button == 'New Game':
@@ -91,12 +92,14 @@ def main():
 def gameWon(gs):
     gs.window['End Capture'].update(disabled=True)
     gs.window['Start Capture'].update(disabled=True)
-    sg.popup_yes_no('Congrats', keep_on_top=True)
+    sg.popup_ok('Congratulations, you won the game! You can start a new game by selecting New Game, '
+                'or quit the game by selecting Exit. Thanks for playing!', keep_on_top=True)
 
 def gameLost(gs):
     gs.window['End Capture'].update(disabled=True)
     gs.window['Start Capture'].update(disabled=True)
-    sg.popup_yes_no('You suck', keep_on_top=True)
+    sg.popup_ok('You lost! Better luck next time. You can start a new game by selecting New Game, '
+                'or quit the game by selecting Exit. Thanks for playing!', keep_on_top=True)
 
 def newGame(gs):
     gs.newGamePressed = True
@@ -160,6 +163,7 @@ def endCapture(gs):
     gs.newCards = noneMSG
     answer = "Yes"
     gs.analyzing = False
+    gs.window['Start Capture'].update(disabled=False)
     gs.window['End Capture'].update(disabled=True)
 
     if not gs.newGamePressed:
