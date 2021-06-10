@@ -35,12 +35,12 @@ def main():
                sg.RButton('End Capture', size=(10, 1), font='Any 14'),
                sg.RButton('New Game', size=(10, 1), font='Any 14')]]
     # Initialize video capture and dimensions
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(1)
     _, frame = cap.read()  #
     height, width, _ = frame.shape
 
     # create the window and show it without the plot
-    window = sg.Window('Demo Application - OpenCV Integration',
+    window = sg.Window('CDIO Gruppe 12',
                        location=(800, 400))
     window.Layout(layout).Finalize()
 
@@ -160,14 +160,15 @@ def endCapture(gs):
     gs.analyzing = False
     gs.window['End Capture'].update(disabled=True)
 
+
     if gs.firstRound:
-       answer = confirmFirstRound(gs)
+            answer = confirmFirstRound(gs)
 
     elif gs.unknownCard:
-       answer = confirmOtherRounds(gs)
+            answer = confirmOtherRounds(gs)
 
     if (answer == "Yes"):
-        onConfirmCards(gs)
+            onConfirmCards(gs)
 
     elif (answer == "No"):
         gs.recognizer.resetTurn()
