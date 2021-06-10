@@ -26,14 +26,14 @@ def main():
     sg.ChangeLookAndFeel('LightGreen')
 
     # define the window layout
-    layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],
-              [sg.Text('Your moves', size=(40, 1), justification='left', font='Helvetica 14')],
+    layout = [[sg.Text('', size=(40, 1), justification='center', font='Helvetica 20')],
+              [sg.Text('Moves', size=(40, 1), justification='left', font='Helvetica 14')],
               [sg.Multiline(size=(30, 30), disabled=True, key='textbox', justification='top'),
                sg.Image(filename='', key='image')],
-              [sg.ReadButton('Exit', size=(10, 1), pad=((200, 0), 3), font='Helvetica 14'),
-               sg.RButton('Start Capture', size=(10, 1), font='Any 14'),
+              [sg.RButton('Start Capture', size=(10, 1),pad=((247, 0), 3), font='Any 14'),
                sg.RButton('End Capture', size=(10, 1), font='Any 14'),
-               sg.RButton('New Game', size=(10, 1), font='Any 14')]]
+               sg.RButton('New Game', size=(10, 1),pad=((150, 0), 3), font='Any 14'),
+               sg.ReadButton('Exit', size=(10, 1),  font='Helvetica 14')]]
     # Initialize video capture and dimensions
     cap = cv.VideoCapture(0)
     _, frame = cap.read()  #
