@@ -122,7 +122,7 @@ def confirmFirstRound(gs):
     printarray = []
     gs.newCards = gs.recognizer.evaluateFirstRound()
     conversion.convertCards(gs.newCards, printarray)
-    return sg.popup_yes_no('New cards: ' + str(printarray),
+    return sg.popup_yes_no('', 'New cards: ' + str(printarray).join(', '),
                            'Correct?',
                            keep_on_top=True)
 
@@ -135,11 +135,11 @@ def confirmOtherRounds(gs):
         conversion.convertSingle(gs.newCards, printarray)
         gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
-        return sg.popup_yes_no('New card: ' + str(printarray),
+        return sg.popup_yes_no('', 'New card: ' + str(printarray).join(', '),
                                'Correct?',
                                keep_on_top=True)
-    elif gs.newCards is None:
-        return sg.popup_ok('No new card was found. Try moving either the cards or camera a bit.',
+    elif gs.newCards == None:
+        return sg.popup_ok('', 'No new card was found. Try moving either the cards or camera a bit.',
                            keep_on_top=True)
 
 
