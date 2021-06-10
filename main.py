@@ -66,6 +66,7 @@ def main():
 
         elif button == 'New Game':
             newGame(gs)
+            continue
 
         elif button == 'End Capture':
             endCapture(gs)
@@ -113,6 +114,8 @@ def newGame(gs):
     gs.window['textbox'].update(gs.moveList)
     gs.firstRound = True
     gs.numOfExpectedCards = 7
+    client.send('END_GAME')
+
 
 
 def confirmFirstRound(gs):
