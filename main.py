@@ -174,5 +174,3 @@ def endCapture(gs):
         gs.window['End Capture'].update(disabled=True)
 
 main()
-
-
