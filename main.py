@@ -35,7 +35,7 @@ def main():
                sg.RButton('End Capture', size=(10, 1), font='Any 14'),
                sg.RButton('New Game', size=(10, 1), font='Any 14')]]
     # Initialize video capture and dimensions
-    cap = cv.VideoCapture(1)
+    cap = cv.VideoCapture(0)
     _, frame = cap.read()  #
     height, width, _ = frame.shape
 
@@ -126,12 +126,15 @@ def confirmOtherRounds(gs):
     gs.newCards = gs.recognizer.evaluate()
     if (gs.newCards != None):
         conversion.convertSingle(gs.newCards, printarray)
-    gs.numOfExpectedCards = gs.numOfExpectedCards + 1
+        gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
-    return sg.popup_yes_no('Confirming state',
-                             'New card this round was: ' + str(printarray),
-                             'Are you satisfied with the current state recognized?',
-                             keep_on_top=True)
+        return sg.popup_yes_no('Confirming state',
+                               'New card this round was: ' + str(printarray),
+                               'Are you satisfied with the current state recognized?',
+                               keep_on_top=True)
+    elif gs.newCards == None:
+        return sg.popup_ok('No new card was found. Try moving either the cards or camera around for better image.', keep_on_top=True)
+
 
 def onConfirmCards(gs):
     gs.recognizer.markAllAsProcessed()
