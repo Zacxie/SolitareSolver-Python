@@ -122,7 +122,7 @@ def confirmFirstRound(gs):
     printarray = []
     gs.newCards = gs.recognizer.evaluateFirstRound()
     conversion.convertCards(gs.newCards, printarray)
-    return sg.popup_yes_no('', 'New cards: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
+    return sg.popup_yes_no('', '\033[1;32;40m Bright Green New cards: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
                            'Correct?',
                            keep_on_top=True)
 
