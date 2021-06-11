@@ -35,7 +35,7 @@ def main():
                sg.RButton('New Game', size=(10, 1), pad=((150, 0), 3), font='Any 14'),
                sg.ReadButton('Exit', size=(10, 1), font='Helvetica 14')]]
     # Initialize video capture and dimensions
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(1) # choose 0 (primary webcam) or 1 (secondary webcam) depending on which webcam you want
     _, frame = cap.read()  #
     height, width, _ = frame.shape
 
@@ -140,7 +140,7 @@ def confirmOtherRounds(gs):
                                keep_on_top=True)
     elif gs.newCards == None:
         return sg.popup_ok('', 'No new card was found. Try moving either the cards or camera a bit.',
-                           keep_on_top=True)
+                           keep_on_top=True, text_color="DarkRed1")
 
 
 def onConfirmCards(gs):
