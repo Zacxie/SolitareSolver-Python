@@ -66,6 +66,7 @@ def main():
 
         elif button == 'Start Capture':
             gs.window['Start Capture'].update(disabled=True)
+            gs.window['New Game'].update(disabled=True)
             gs.analyzing = True
 
         elif button == 'New Game':
@@ -73,7 +74,6 @@ def main():
             continue
 
         elif button == 'End Capture':
-            gs.window['New Game'].update(disabled=False)
             endCapture(gs)
 
         # Capture frame-by-frame
@@ -201,6 +201,7 @@ def endCapture(gs):
 
         if (answer == "Yes"):
             onConfirmCards(gs)
+            gs.window['New Game'].update(disabled=False)
 
         elif (answer == "No"):
             gs.recognizer.resetTurn()
