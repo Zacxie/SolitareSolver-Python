@@ -15,6 +15,8 @@ print("Connection established")
 def send(cardArray):
     if cardArray == 'END_GAME':
         conn.send(bytes('END_GAME' + "\r\n", 'UTF-8'))  # sends the string to the java server
+    if (cardArray == 'EXIT'):
+        conn.send(bytes('EXIT' + "\r\n", 'UTF-8'))  # sends the string to the java server
     if cardArray == None or cardArray == 'NONE':
         conn.send(bytes('NONE' + "\r\n", 'UTF-8'))  # sends the string to the java server
     else:

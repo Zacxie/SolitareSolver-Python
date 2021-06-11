@@ -46,6 +46,9 @@ def main():
 
     gs = GUIState.GUIState(stateRecognizer.StateRecognizer(width, height), window)
 
+    gs.window['New Game'].update(disabled=True)
+
+
     # ---===--- Event LOOP Read and display frames, operate the GUI --- #
     while True:
         # Configure buttons
@@ -58,6 +61,7 @@ def main():
 
         # Button choice
         if button == 'Exit' or values is None:
+            client.send('EXIT')
             sys.exit(0)
 
         elif button == 'Start Capture':
@@ -69,6 +73,7 @@ def main():
             continue
 
         elif button == 'End Capture':
+            gs.window['New Game'].update(disabled=False)
             endCapture(gs)
 
         # Capture frame-by-frame
@@ -122,7 +127,7 @@ def confirmFirstRound(gs):
     printarray = []
     gs.newCards = gs.recognizer.evaluateFirstRound()
     conversion.convertCards(gs.newCards, printarray)
-    return sg.popup_yes_no('', '\033[1;32;40m Bright Green New cards: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
+    return sg.popup_yes_no('', 'New cards: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
                            'Correct?',
                            keep_on_top=True)
 
