@@ -7,8 +7,6 @@ def convertCards(newCards, printarray=[]):
 
     for i in newCards:
 
-        if (len(str(i)) != 2 or str(i).__contains__("10")):
-            continue
 
         ### tjekker suit
         if (str(i).__contains__('H')):
@@ -103,7 +101,7 @@ def stringBuilder (msg, returnmsg = []):
 
     for i in msg:
 
-        if (len(str(i)) == 2 or str(i).__contains__("10")): #to
+        if (len(str(i)) == 2 or str(i).__contains__("10")):
 
             ### tjekker suit
             if (str(i).__contains__('H')):
