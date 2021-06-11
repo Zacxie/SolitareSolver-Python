@@ -152,9 +152,19 @@ def onConfirmCards(gs):
     msg = client.recieve()
     msgItems = msg.split(";")
 
+    msg0converted = []
+    msg0 = msgItems[0].split()
+    conversion.stringBuilder(msg0,msg0converted)
+    text = msg0converted.__str__().replace("'", "")
+    text = text.replace(",","")
+    text = text.replace("[", "")
+    text = text.replace("]", "")
+
+
     # 1st item is description of move
-    gs.moveList = "Processed cards: " + gs.recognizer.getAllProcessedLabels() + "\nTurn: " + msgItems[3] + "" + \
-                  msgItems[0] + '\n\n' + gs.moveList
+    # "Processed cards: " + gs.recognizer.getAllProcessedLabels() +
+    gs.moveList = "\nTurn: " + msgItems[3] + "" + \
+                  text + '\n\n' + gs.moveList
     gs.window['textbox'].update(gs.moveList)
 
     # 2nd item is true/false describing if a new card is revealed
