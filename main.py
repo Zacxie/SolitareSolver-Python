@@ -152,8 +152,6 @@ def onConfirmCards(gs):
     msg = client.recieve()
     msgItems = msg.split(";")
 
-    print("msg item " + str(msgItems))
-
     msg0converted = []
     msg0 = msgItems[0].split()
     conversion.stringBuilder(msg0,msg0converted)
@@ -161,7 +159,6 @@ def onConfirmCards(gs):
     text = text.replace(",","")
     text = text.replace("[", "")
     text = text.replace("]", "")
-    print("converted msg " + text)
 
 
     # 1st item is description of move
