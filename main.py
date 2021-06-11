@@ -165,7 +165,8 @@ def onConfirmCards(gs):
 
 
     # 1st item is description of move
-    gs.moveList = "Processed cards: " + gs.recognizer.getAllProcessedLabels() + "\nTurn: " + msgItems[3] + "" + \
+    # "Processed cards: " + gs.recognizer.getAllProcessedLabels() +
+    gs.moveList = "\nTurn: " + msgItems[3] + "" + \
                   text + '\n\n' + gs.moveList
     gs.window['textbox'].update(gs.moveList)
 
