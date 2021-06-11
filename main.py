@@ -140,7 +140,7 @@ def confirmOtherRounds(gs):
                                keep_on_top=True)
     elif gs.newCards == None:
         return sg.popup_ok('', 'No new card was found. Try moving either the cards or camera a bit.',
-                           keep_on_top=True, text_color="DarkRed1")
+                           keep_on_top=True, text_color='Red')
 
 
 def onConfirmCards(gs):
