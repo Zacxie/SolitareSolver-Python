@@ -32,7 +32,7 @@ noneMSG = 'NONE'
 
 
 def main():
-    sg.ChangeLookAndFeel('LightGreen')
+    sg.ChangeLookAndFeel('TealMono')
 
     # define the window layout
     layout = [[sg.Text('', size=(40, 1), justification='center', font='Helvetica 20')],
@@ -71,6 +71,7 @@ def main():
         # Button choice
         if button == 'Exit' or values is None:
             client.send('EXIT')
+            client.end_con()
             sys.exit(0)
 
         elif button == 'Start Capture':
