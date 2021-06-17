@@ -48,6 +48,10 @@ class StateRecognizer(object):
         for key in self.processed.keys():
             self.processed[key] = True
 
+        for key in self.processed:
+            if not self.processed[key]:
+                self.count[key] = 0
+
     def addItem(self, label, x, y):
         if label in self.processed.keys():
             #Increment it's counter and update coordinates

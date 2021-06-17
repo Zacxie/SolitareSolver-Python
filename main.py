@@ -160,7 +160,8 @@ def confirmOtherRounds(gs):
 
 
 def onConfirmCards(gs):
-    gs.recognizer.markAllAsProcessed()
+    if gs.unknownCard:
+        gs.recognizer.markAllAsProcessed()
     # It is no longer first round
     gs.firstRound = False
 
