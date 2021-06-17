@@ -199,7 +199,7 @@ def onConfirmCards(gs):
 
 def endCapture(gs):
     gs.newCards = noneMSG
-    answer = "Yes"
+    answer = "No"
     gs.analyzing = False
     gs.window['Start Capture'].update(disabled=False)
     gs.window['End Capture'].update(disabled=True)
