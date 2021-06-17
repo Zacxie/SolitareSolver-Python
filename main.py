@@ -84,8 +84,8 @@ def main():
             continue
 
         elif button == 'End Capture':
-            print('NumOfExpected: '+ gs.recognizer.getNumOfProcessedCards())
-            print('Processed Cards: '+ gs.recognizer.getNumOfProcessedCards())
+            print('NumOfExpected: '+ str(gs.numOfExpectedCards))
+            print('Processed Cards: '+ str(gs.recognizer.getNumOfProcessedCards()))
             endCapture(gs)
 
         # Capture frame-by-frame
