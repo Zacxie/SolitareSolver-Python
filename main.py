@@ -211,7 +211,7 @@ def endCapture(gs):
         elif gs.unknownCard:
             answer = confirmOtherRounds(gs)
 
-        if (answer == "Yes"):
+        if (answer == "Yes" or not gs.unknownCard):
             onConfirmCards(gs)
             gs.window['New Game'].update(disabled=False)
 
