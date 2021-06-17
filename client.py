@@ -7,18 +7,24 @@
 # Sebastian Bjerre - s163526
 
 import socket
+import time
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-try:
-    client_socket.bind(("localhost", 9999))
-except socket.error as err:
-    print('bind failed. Error: '.format(err))
+while 1:
+    try:
+        print("Trying to establish connection")
+        client_socket.bind(("localhost", 9999))
 
-client_socket.listen(10)
-conn, addr = client_socket.accept()
-print("Connection established")
+    except socket.error as err:
+        time.sleep(2)
+        #print('bind failed. Error: '.format(err))
+        continue
 
+    client_socket.listen(10)
+    conn, addr = client_socket.accept()
+    print("Connection established")
+    break
 
 def send(cardArray):
     if cardArray == 'END_GAME':
