@@ -134,6 +134,17 @@ class StateRecognizer(object):
             resultString = resultString + " " +key
         return resultString
 
+    def getNumOfProcessedCards(self):
+        count = 0
+        for key in self.processed.keys():
+            if self.processed[key]:
+                count = count + 1
+        return count
+
+
 def reverse(lst):
     return [ele for ele in reversed(lst)]
+
+
+
 
