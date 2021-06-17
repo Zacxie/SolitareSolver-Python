@@ -147,7 +147,6 @@ def confirmOtherRounds(gs):
     gs.newCards = gs.recognizer.evaluate()
     if (gs.newCards != None):
         conversion.convertSingle(gs.newCards, printarray)
-        gs.numOfExpectedCards = gs.numOfExpectedCards + 1
 
         return sg.popup_yes_no('', 'New card: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
                                'Correct?',
@@ -184,6 +183,7 @@ def onConfirmCards(gs):
     # 2nd item is true/false describing if a new card is revealed
     if msgItems[1] == 'true' or msgItems[1] == 'True':
         gs.unknownCard = True
+        gs.numOfExpectedCards = gs.numOfExpectedCards +1
     else:
         gs.unknownCard = False
 
@@ -212,9 +212,15 @@ def endCapture(gs):
             onConfirmCards(gs)
             gs.window['New Game'].update(disabled=False)
 
+            gs.newCards = None
+
+
+
         elif (answer == "No"):
             gs.recognizer.resetTurn()
             gs.window['End Capture'].update(disabled=True)
+            gs.newCards = None
+
 
     gs.newGamePressed = False
 
