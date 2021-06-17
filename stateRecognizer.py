@@ -9,7 +9,7 @@
 
 import math
 
-
+noneMSG = 'NONE'
 class StateRecognizer(object):
 
     def __init__(self, width, height):
@@ -101,7 +101,7 @@ class StateRecognizer(object):
         # The counts of the remaining cards will be set to 0.
 
         maxCount = 0
-        maxKey = None
+        maxKey = noneMSG
 
         for key,value in self.count.items():
             # Find most counted unprocessed card
@@ -134,6 +134,17 @@ class StateRecognizer(object):
             resultString = resultString + " " +key
         return resultString
 
+    def getNumOfProcessedCards(self):
+        count = 0
+        for key in self.processed.keys():
+            if self.processed[key]:
+                count = count + 1
+        return count
+
+
 def reverse(lst):
     return [ele for ele in reversed(lst)]
+
+
+
 

@@ -84,6 +84,8 @@ def main():
             continue
 
         elif button == 'End Capture':
+            print('NumOfExpected: '+ str(gs.numOfExpectedCards))
+            print('Processed Cards: '+ str(gs.recognizer.getNumOfProcessedCards()))
             endCapture(gs)
 
         # Capture frame-by-frame
@@ -146,13 +148,13 @@ def confirmOtherRounds(gs):
     printarray = []
     # Only look for new card if unkownCard is true
     gs.newCards = gs.recognizer.evaluate()
-    if (gs.newCards != None):
+    if (gs.newCards != noneMSG):
         conversion.convertSingle(gs.newCards, printarray)
 
         return sg.popup_yes_no('', 'New card: ' + str(printarray).replace('[', '').replace(']', '').replace('\'', ''),
                                'Correct?',
                                keep_on_top=True)
-    elif gs.newCards == None:
+    elif gs.newCards == noneMSG:
         return sg.popup_ok('', 'No new card was found. Try moving either the cards or camera a bit.',
                            keep_on_top=True)
 
@@ -213,17 +215,19 @@ def endCapture(gs):
             onConfirmCards(gs)
             gs.window['New Game'].update(disabled=False)
 
-            gs.newCards = None
+            gs.newCards = noneMSG
 
 
 
         elif (answer == "No"):
             gs.recognizer.resetTurn()
             gs.window['End Capture'].update(disabled=True)
-            gs.newCards = None
+            gs.newCards = noneMSG
 
 
     gs.newGamePressed = False
 
 
 main()
+
+
