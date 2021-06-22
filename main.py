@@ -194,6 +194,7 @@ def onConfirmCards(gs):
     # 3rd item is either GAME_WON, GAME_LOST or empty
     if msgItems[2] == "GAME_WON":
         gameWon(gs)
+
     elif msgItems[2] == "GAME_LOST":
         gameLost(gs)
 
